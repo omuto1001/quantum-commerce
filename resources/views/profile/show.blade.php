@@ -6,37 +6,36 @@
 
     {{-- Profile header card with avatar and status badge --}}
     <div class="bg-white robg-white/70 backdrop-blur-md rounded-2xl shadow-lg border border-white/40unded-2xl shadow-sm border border-gray-100 p-8 mb-6">
-        <div class="flex items-center gap-5">
-            {{-- Large avatar circle with the user's initial --}}
-            <div class="w-20 h-20 rounded-full bg-green-700 text-white flex items-center justify-center text-3xl font-bold shrink-0">
-                {{ strtoupper(substr($user->name, 0, 1)) }}
-            </div>
-
-            <div class="flex-1">
-                <h1 class="text-2xl font-bold text-gray-800">{{ $user->name }}</h1>
-                <p class="text-gray-500">{{ $user->email }}</p>
-
-                <div class="flex gap-2 mt-2">
-                    {{-- Role badge --}}
-                    <span class="bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full">
-                        {{ $user->roleLabel() }}
-                    </span>
-
-                    {{-- Approval status badge, color-coded --}}
-                    @if ($user->approval_status === 'approved')
-                        <span class="bg-blue-100 text-blue-700 text-xs font-semibold px-3 py-1 rounded-full">Approved</span>
-                    @elseif ($user->approval_status === 'pending')
-                        <span class="bg-yellow-100 text-yellow-700 text-xs font-semibold px-3 py-1 rounded-full">Pending Approval</span>
-                    @else
-                        <span class="bg-red-100 text-red-700 text-xs font-semibold px-3 py-1 rounded-full">Rejected</span>
-                    @endif
-                </div>
-            </div>
-
-            <a href="{{ route('profile.edit') }}" class="bg-green-700 hover:bg-green-800 text-white px-5 py-2 rounded-lg text-sm font-medium shrink-0">
-                Edit Profile
-            </a>
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8 mb-6">
+    <div class="flex flex-col sm:flex-row sm:items-center gap-5">
+        <div class="w-20 h-20 rounded-full bg-green-700 text-white flex items-center justify-center text-3xl font-bold shrink-0">
+            {{ strtoupper(substr($user->name, 0, 1)) }}
         </div>
+
+        <div class="flex-1 min-w-0">
+            <h1 class="text-2xl font-bold text-gray-800 break-words">{{ $user->name }}</h1>
+            <p class="text-gray-500 break-words">{{ $user->email }}</p>
+
+            <div class="flex flex-wrap gap-2 mt-2">
+                <span class="bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full">
+                    {{ $user->roleLabel() }}
+                </span>
+
+                @if ($user->approval_status === 'approved')
+                    <span class="bg-blue-100 text-blue-700 text-xs font-semibold px-3 py-1 rounded-full">Approved</span>
+                @elseif ($user->approval_status === 'pending')
+                    <span class="bg-yellow-100 text-yellow-700 text-xs font-semibold px-3 py-1 rounded-full">Pending Approval</span>
+                @else
+                    <span class="bg-red-100 text-red-700 text-xs font-semibold px-3 py-1 rounded-full">Rejected</span>
+                @endif
+            </div>
+        </div>
+
+        <a href="{{ route('profile.edit') }}" class="bg-green-700 hover:bg-green-800 text-white px-5 py-2 rounded-lg text-sm font-medium shrink-0 text-center">
+            Edit Profile
+        </a>
+    </div>
+</div>
     </div>
 
     {{-- Personal details card --}}
