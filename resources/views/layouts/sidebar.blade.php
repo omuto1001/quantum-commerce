@@ -2,7 +2,7 @@
     resources/views/layouts/sidebar.blade.php
     Glassmorphism sidebar - frosted glass effect over the gradient background.
 --}}
-<aside class="w-64 h-screen bg-white/10 backdrop-blur-xl border-r border-white/20 shadow-2xl text-white flex flex-col fixed left-0 top-0">
+<aside id="sidebar" class="w-64 h-screen bg-neutral-900 text-white flex flex-col fixed left-0 top-0 z-40 transform -translate-x-full lg:translate-x-0 transition-transform duration-200">
 
     {{-- Logo --}}
     <div class="flex items-center gap-2 p-6 text-xl font-bold shrink-0 text-orange-300">
@@ -122,3 +122,14 @@
         </form>
     </div>
 </aside>
+{{-- Mobile menu toggle button - only visible on small screens --}}
+<button onclick="document.getElementById('sidebar').classList.toggle('-translate-x-full'); document.getElementById('sidebar-overlay').classList.toggle('hidden');"
+        class="lg:hidden fixed top-4 left-4 z-50 bg-neutral-900 text-white p-2 rounded-lg shadow-lg">
+    ☰
+</button>
+
+{{-- Dark overlay behind the sidebar when open on mobile, tapping it closes the menu --}}
+<div id="sidebar-overlay"
+     onclick="document.getElementById('sidebar').classList.add('-translate-x-full'); this.classList.add('hidden');"
+     class="hidden lg:hidden fixed inset-0 bg-black/50 z-30">
+</div>
