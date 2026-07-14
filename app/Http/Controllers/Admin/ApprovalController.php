@@ -24,15 +24,21 @@ class ApprovalController extends Controller
     return view('admin.approvals', compact('pendingUsers'));
 }
 
-    public function approve(User $user)
-    {
-        $user->update(['approval_status' => 'approved']);
+   public function approve(User $user)
+{
+    $user->update(['approval_status' => 'approved']);
 
-        // Notify the vendor/rider that their account is now active
+    // Try to send the notification email, but never let a mail failure
+    // block the actual approval - the account is already approved above
+    // regardless of whether this email succeeds.
+    try {
         Mail::to($user->email)->send(new AccountApprovedMail($user));
-
-        return back()->with('success', "{$user->name}'s account has been approved.");
+    } catch (\Exception $e) {
+        \Log::error('Failed to send approval email: ' . $e->getMessage());
     }
+
+    return back()->with('success', "{$user->name}'s account has been approved.");
+}
 
     public function reject(User $user)
     {

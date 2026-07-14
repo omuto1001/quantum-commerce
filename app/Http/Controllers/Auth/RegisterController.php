@@ -7,11 +7,12 @@ use App\Http\Controllers\Controller;
 use App\Models\Rider;
 use App\Models\User;
 use App\Models\Vendor;
+use App\Mail\WelcomeMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Mail\WelcomeMail;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 
 class RegisterController extends Controller
 {
@@ -24,7 +25,6 @@ class RegisterController extends Controller
 
     public function registerCustomer(Request $request)
     {
-        // Validate input before touching the database
         $validated = $request->validate([
             'name'     => ['required', 'string', 'max:255'],
             'email'    => ['required', 'email', 'unique:users,email'],
@@ -33,7 +33,6 @@ class RegisterController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
-        // Customers are approved automatically, no admin review needed
         $user = User::create([
             'name'            => $validated['name'],
             'email'           => $validated['email'],
@@ -43,16 +42,20 @@ class RegisterController extends Controller
             'approval_status' => 'approved',
         ]);
 
-        // Assign the 'customer' role via Spatie
         $user->assignRole('customer');
 
-        Auth::login($user); // log them straight in
+        Auth::login($user);
 
-        // Send welcome confirmation email
-Mail::to($user->email)->send(new WelcomeMail($user));
+        // Try to send the welcome email, but never let a mail failure
+        // block registration - the account is already created above.
+        try {
+            Mail::to($user->email)->send(new WelcomeMail($user));
+        } catch (\Exception $e) {
+            Log::error('Failed to send welcome email: ' . $e->getMessage());
+        }
 
-return redirect()->route('profile.show')
-    ->with('success', 'Welcome! Your account has been created.');
+        return redirect()->route('profile.show')
+            ->with('success', 'Welcome! Your account has been created.');
     }
 
     // ---------------- VENDOR ----------------
@@ -74,7 +77,6 @@ return redirect()->route('profile.show')
             'shop_description' => ['nullable', 'string'],
         ]);
 
-        // Vendor account starts as 'pending' - can't use dashboard yet
         $user = User::create([
             'name'            => $validated['name'],
             'email'           => $validated['email'],
@@ -84,24 +86,26 @@ return redirect()->route('profile.show')
             'approval_status' => 'pending',
         ]);
 
-        // Assign the 'vendor' role via Spatie
         $user->assignRole('vendor');
 
-        // Save the vendor's shop-specific details
         Vendor::create([
             'user_id'          => $user->id,
             'shop_name'        => $validated['shop_name'],
             'shop_description' => $validated['shop_description'] ?? null,
         ]);
 
-        Auth::login($user); // logged in, but middleware blocks the dashboard
+        Auth::login($user);
 
-       Mail::to($user->email)->send(new WelcomeMail($user));
+        try {
+            Mail::to($user->email)->send(new WelcomeMail($user));
+        } catch (\Exception $e) {
+            Log::error('Failed to send welcome email: ' . $e->getMessage());
+        }
 
-return redirect()->route('approval.pending')
-    ->with('success', 'Your vendor application has been submitted for review.')
-;
+        return redirect()->route('approval.pending')
+            ->with('success', 'Your vendor application has been submitted for review.');
     }
+
     // ---------------- RIDER ----------------
 
     public function showRiderForm()
@@ -131,7 +135,6 @@ return redirect()->route('approval.pending')
             'approval_status' => 'pending',
         ]);
 
-        // Assign the 'rider' role via Spatie
         $user->assignRole('rider');
 
         Rider::create([
@@ -143,10 +146,14 @@ return redirect()->route('approval.pending')
 
         Auth::login($user);
 
-       Mail::to($user->email)->send(new WelcomeMail($user));
+        try {
+            Mail::to($user->email)->send(new WelcomeMail($user));
+        } catch (\Exception $e) {
+            Log::error('Failed to send welcome email: ' . $e->getMessage());
+        }
 
-return redirect()->route('approval.pending')
-    ->with('success', 'Your delivery agent application has been submitted for review.');
+        return redirect()->route('approval.pending')
+            ->with('success', 'Your delivery agent application has been submitted for review.');
     }
 
     // Shown to vendors/riders while waiting for admin approval
