@@ -85,8 +85,8 @@
 
 {{-- Coming soon notice --}}
 <div class="bg-blue-50 border border-blue-200 rounded-2xl p-6">
-    <p class="text-blue-800 font-medium">🚧 More coming soon</p>
-    <p class="text-blue-700 text-sm mt-1">Product management and order tracking will appear here once those features are built.</p>
+    <p class="text-blue-800 font-medium">🚧 More New Stock Coming Soon </p>
+
 </div>
 
 @endsection

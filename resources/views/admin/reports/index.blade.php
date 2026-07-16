@@ -10,46 +10,48 @@
 
 {{-- Top-level summary cards --}}
 <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-    <div class="bg-white rounded-2bg-white/70 backdrop-blur-md rounded-2xl shadow-lg border border-white/40xl shadow-sm border border-gray-100 p-6">
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
         <p class="text-sm text-gray-500 font-medium">Total Revenue (GMV)</p>
         <p class="text-2xl font-bold mt-2 text-gray-800">UGX {{ number_format($totalRevenue, 2) }}</p>
     </div>
-    <div class="bg-white rounded-2xl shadow-sm border bordbg-white/70 backdrop-blur-md rounded-2xl shadow-lg border border-white/40er-gray-100 p-6">
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
         <p class="text-sm text-gray-500 font-medium">Total Orders</p>
         <p class="text-2xl font-bold mt-2 text-gray-800">{{ $totalOrders }}</p>
     </div>
-    <div class="bg-white rbg-white/70 backdrop-blur-md rounded-2xl shadow-lg border border-white/40ounded-2xl shadow-sm border border-gray-100 p-6">
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
         <p class="text-sm text-gray-500 font-medium">Platform Commission</p>
         <p class="text-2xl font-bold mt-2 text-green-700">UGX {{ number_format($totalCommission, 2) }}</p>
     </div>
-    <div class="bg-white roubg-white/70 backdrop-blur-md rounded-2xl shadow-lg border border-white/40nded-2xl shadow-sm border border-gray-100 p-6">
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
         <p class="text-sm text-gray-500 font-medium">Delivered Items</p>
         <p class="text-2xl font-bold mt-2 text-gray-800">{{ $deliveredItems }}</p>
     </div>
 </div>
 
-{{-- Simple 7-day revenue bar chart using plain HTML/CSS bars --}}
-<div class="bg-white rounded-2xl shadow-sm border border-bg-white/70 backdrop-blur-md rounded-2xl shadow-lg border border-white/40gray-100 p-6 mb-6">
+{{-- Revenue trend line chart --}}
+<div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
     <h2 class="text-lg font-bold text-gray-800 mb-4">Revenue - Last 7 Days</h2>
+    <div id="revenueChart" style="width: 100%; height: 300px;"></div>
+</div>
 
-    @php
-        $maxValue = $last7Days->max('total') ?: 1; // avoid divide-by-zero if all days are 0
-    @endphp
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
 
-    <div class="flex items-end gap-4 h-40">
-        @foreach ($last7Days as $day)
-            <div class="flex-1 flex flex-col items-center justify-end h-full">
-                <div class="w-full bg-green-600 rounded-t-lg" style="height: {{ ($day['total'] / $maxValue) * 100 }}%; min-height: 2px;"></div>
-                <p class="text-xs text-gray-500 mt-2">{{ $day['date'] }}</p>
-            </div>
-        @endforeach
+    {{-- Top vendors pie chart --}}
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <h2 class="text-lg font-bold text-gray-800 mb-4">Top Vendors by Sales</h2>
+        <div id="vendorsChart" style="width: 100%; height: 320px;"></div>
+    </div>
+
+    {{-- Top products bar chart --}}
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <h2 class="text-lg font-bold text-gray-800 mb-4">Top Products by Units Sold</h2>
+        <div id="productsChart" style="width: 100%; height: 320px;"></div>
     </div>
 </div>
 
+{{-- Data tables underneath, for exact figures --}}
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-    {{-- Top vendors table --}}
-    <div class="bg-white rounded-2xl shadow-sm borbg-white/70 backdrop-blur-md rounded-2xl shadow-lg border border-white/40der border-gray-100 p-6">
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
         <h2 class="text-lg font-bold text-gray-800 mb-4">Top Vendors</h2>
         @forelse ($topVendors as $entry)
             <div class="flex items-center justify-between py-2 border-b last:border-b-0">
@@ -64,8 +66,7 @@
         @endforelse
     </div>
 
-    {{-- Top products table --}}
-    <div class="bg-white rounded-2xbg-white/70 backdrop-blur-md rounded-2xl shadow-lg border border-white/40l shadow-sm border border-gray-100 p-6">
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
         <h2 class="text-lg font-bold text-gray-800 mb-4">Top Products</h2>
         @forelse ($topProducts as $entry)
             <div class="flex items-center justify-between py-2 border-b last:border-b-0">
@@ -80,5 +81,82 @@
         @endforelse
     </div>
 </div>
+
+{{-- Highcharts rendering script --}}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    // ---- Revenue trend line chart ----
+    Highcharts.chart('revenueChart', {
+        chart: { type: 'areaspline' },
+        title: { text: null },
+        credits: { enabled: false },
+        xAxis: {
+            categories: @json($last7Days->pluck('date')),
+        },
+        yAxis: {
+            title: { text: 'Revenue (UGX)' },
+        },
+        series: [{
+            name: 'Revenue',
+            data: @json($last7Days->pluck('total')),
+            color: '#15803d',
+            fillOpacity: 0.15,
+        }],
+        plotOptions: {
+            areaspline: { marker: { enabled: true } }
+        }
+    });
+
+    // ---- Top vendors pie chart ----
+    Highcharts.chart('vendorsChart', {
+        chart: { type: 'pie' },
+        title: { text: null },
+        credits: { enabled: false },
+        tooltip: {
+            pointFormat: '<b>{point.percentage:.1f}%</b> (UGX {point.y:,.0f})'
+        },
+        series: [{
+            name: 'Sales',
+            colorByPoint: true,
+            data: [
+                @foreach ($topVendors as $entry)
+                    {
+                        name: @json($entry->vendor->shop_name ?? 'Unknown'),
+                        y: {{ (float) $entry->total_sales }}
+                    },
+                @endforeach
+            ]
+        }]
+    });
+
+    // ---- Top products bar chart ----
+    Highcharts.chart('productsChart', {
+        chart: { type: 'bar' },
+        title: { text: null },
+        credits: { enabled: false },
+        xAxis: {
+            categories: [
+                @foreach ($topProducts as $entry)
+                    @json($entry->product->name ?? 'Unknown'),
+                @endforeach
+            ],
+        },
+        yAxis: {
+            title: { text: 'Units Sold' },
+        },
+        series: [{
+            name: 'Units Sold',
+            data: [
+                @foreach ($topProducts as $entry)
+                    {{ (int) $entry->total_sold }},
+                @endforeach
+            ],
+            color: '#ea580c',
+        }],
+        legend: { enabled: false },
+    });
+});
+</script>
 
 @endsection
