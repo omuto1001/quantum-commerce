@@ -10,32 +10,32 @@ use Illuminate\Support\Facades\Auth;
 
 class RiderController extends Controller
 {
-    // The rider's main dashboard - shows their stats
     public function dashboard()
-{
-    $rider = Auth::user()->rider;
+    {
+        $rider = Auth::user()->rider;
 
-    // Safety check: if this user has the rider role but no matching
-    // rider profile row exists (e.g. role was changed manually without
-    // creating the profile), redirect them instead of crashing
-    if (! $rider) {
-        return redirect()->route('profile.show')
-            ->with('success', 'Your rider profile is incomplete. Please contact support.');
+        // Safety check: redirect instead of crashing if this account
+        // has the rider role but no matching rider profile row
+        if (! $rider) {
+            return redirect()->route('profile.show')
+                ->with('success', 'Your rider profile is incomplete. Please contact support.');
+        }
+
+        return view('rider.dashboard', [
+            'rider' => $rider,
+            'activeDeliveries' => $rider->orderItems()->whereIn('status', ['shipped'])->count(),
+            'completedDeliveries' => $rider->orderItems()->where('status', 'delivered')->count(),
+        ]);
     }
 
-    return view('rider.dashboard', [
-        'rider' => $rider,
-        'activeDeliveries' => $rider->orderItems()->whereIn('status', ['shipped'])->count(),
-        'completedDeliveries' => $rider->orderItems()->where('status', 'delivered')->count(),
-    ]);
-
-    }
-
-    // Shows deliveries available to accept (shipped by a vendor, no rider assigned yet)
-    // PLUS this rider's own currently active deliveries
     public function index()
     {
         $rider = Auth::user()->rider;
+
+        if (! $rider) {
+            return redirect()->route('profile.show')
+                ->with('success', 'Your rider profile is incomplete. Please contact support.');
+        }
 
         $availableDeliveries = OrderItem::where('status', 'shipped')
             ->whereNull('rider_id')
@@ -52,20 +52,24 @@ class RiderController extends Controller
         return view('rider.deliveries.index', compact('availableDeliveries', 'myDeliveries'));
     }
 
-    // Rider accepts an available delivery, assigning it to themselves
     public function accept(OrderItem $orderItem)
     {
+        $rider = Auth::user()->rider;
+
+        abort_if(! $rider, 403, 'Your rider profile is incomplete.');
         abort_if($orderItem->status !== 'shipped' || $orderItem->rider_id !== null, 403);
 
-        $orderItem->update(['rider_id' => Auth::user()->rider->id]);
+        $orderItem->update(['rider_id' => $rider->id]);
 
         return back()->with('success', 'Delivery accepted. It now appears in your active deliveries.');
     }
 
-    // Rider marks a delivery they're handling as delivered
     public function markDelivered(OrderItem $orderItem)
     {
-        abort_if($orderItem->rider_id !== Auth::user()->rider->id, 403);
+        $rider = Auth::user()->rider;
+
+        abort_if(! $rider, 403, 'Your rider profile is incomplete.');
+        abort_if($orderItem->rider_id !== $rider->id, 403);
 
         $orderItem->update(['status' => 'delivered']);
 
@@ -74,10 +78,8 @@ class RiderController extends Controller
         $commission = $saleAmount * ($vendor->commission_rate / 100);
         $vendorEarnings = $saleAmount - $commission;
 
-        // Credit the vendor's wallet with their share
         $vendor->increment('wallet_balance', $vendorEarnings);
 
-        // Record the platform's commission as actual revenue
         PlatformEarning::create([
             'order_item_id' => $orderItem->id,
             'vendor_id' => $vendor->id,
@@ -87,10 +89,14 @@ class RiderController extends Controller
         return back()->with('success', 'Delivery marked as completed.');
     }
 
-    // History of everything this rider has delivered
     public function history()
     {
         $rider = Auth::user()->rider;
+
+        if (! $rider) {
+            return redirect()->route('profile.show')
+                ->with('success', 'Your rider profile is incomplete. Please contact support.');
+        }
 
         $deliveries = OrderItem::where('rider_id', $rider->id)
             ->where('status', 'delivered')
