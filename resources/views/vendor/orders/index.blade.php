@@ -5,7 +5,8 @@
 <div class="bg-white rounded-bg-white/70 backdrop-blur-md rounded-2xl shadow-lg border border-white/402xl shadow-sm border border-gray-100 p-6">
     <h2 class="text-2xl font-bold text-gray-800 mb-6">Orders Received</h2>
 
-    <table class="w-full text-left border-collapse">
+    <div class="overflow-x-auto -mx-6 px-6">
+        <table class="w-full text-left border-collapse min-w-[700px]">
         <thead>
             <tr class="border-b text-sm text-gray-500">
                 <th class="py-2">Order #</th>
@@ -56,5 +57,6 @@
             @endforelse
         </tbody>
     </table>
+    </div>
 </div>
 @endsection

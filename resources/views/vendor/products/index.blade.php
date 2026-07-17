@@ -11,8 +11,9 @@
     </div>
 
     
+<div class="overflow-x-auto -mx-6 px-6">
+    <table class="w-full text-left border-collapse min-w-[600px]">
 
-    <table class="w-full text-left border-collapse">
         <thead>
             <tr class="border-b text-sm text-gray-500">
     <th class="py-2">Image</th>
@@ -67,5 +68,6 @@
             @endforelse
         </tbody>
     </table>
+    </div>
 </div>
 @endsection
