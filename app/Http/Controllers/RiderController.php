@@ -12,14 +12,23 @@ class RiderController extends Controller
 {
     // The rider's main dashboard - shows their stats
     public function dashboard()
-    {
-        $rider = Auth::user()->rider;
+{
+    $rider = Auth::user()->rider;
 
-        return view('rider.dashboard', [
-            'rider' => $rider,
-            'activeDeliveries' => $rider->orderItems()->whereIn('status', ['shipped'])->count(),
-            'completedDeliveries' => $rider->orderItems()->where('status', 'delivered')->count(),
-        ]);
+    // Safety check: if this user has the rider role but no matching
+    // rider profile row exists (e.g. role was changed manually without
+    // creating the profile), redirect them instead of crashing
+    if (! $rider) {
+        return redirect()->route('profile.show')
+            ->with('success', 'Your rider profile is incomplete. Please contact support.');
+    }
+
+    return view('rider.dashboard', [
+        'rider' => $rider,
+        'activeDeliveries' => $rider->orderItems()->whereIn('status', ['shipped'])->count(),
+        'completedDeliveries' => $rider->orderItems()->where('status', 'delivered')->count(),
+    ]);
+
     }
 
     // Shows deliveries available to accept (shipped by a vendor, no rider assigned yet)
