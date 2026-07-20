@@ -30,52 +30,53 @@ class ProfileController extends Controller
 
     // Handle the profile update submission
     public function update(Request $request)
-    {
-        $user = Auth::user();
+{
+    $user = Auth::user();
+    $oldEmail = $user->email;
 
-        $validated = $request->validate([
-            'name'    => ['required', 'string', 'max:255'],
-            'email'   => [
-                'required', 'email',
-                // ignore this user's own current email during the uniqueness check
-                Rule::unique('users', 'email')->ignore($user->id),
-            ],
-            'phone'    => ['required', 'string', 'max:20'],
-            'address'  => ['required', 'string', 'max:255'],
-            'password' => ['nullable', 'string', 'min:8', 'confirmed'], // optional
-        ]);
+    $validated = $request->validate([
+        'name'    => ['required', 'string', 'max:255'],
+        'email'   => [
+            'required', 'email',
+            Rule::unique('users', 'email')->ignore($user->id),
+        ],
+        'phone'    => ['required', 'string', 'max:20'],
+        'address'  => ['required', 'string', 'max:255'],
+        'password' => ['nullable', 'string', 'min:8', 'confirmed'],
+    ]);
 
-        $user->name    = $validated['name'];
-        $user->email   = $validated['email'];
-        $user->phone   = $validated['phone'];
-        $user->address = $validated['address'];
+    $user->name    = $validated['name'];
+    $user->email   = $validated['email'];
+    $user->phone   = $validated['phone'];
+    $user->address = $validated['address'];
 
-        // Only touch the password if a new one was actually typed
-        if (! empty($validated['password'])) {
-            $user->password = Hash::make($validated['password']);
-        }
-
-        $user->save();
-
-        // Update vendor-specific fields if this user is a vendor
-        if ($user->isVendor() && $user->vendor) {
-            $vendorData = $request->validate([
-                'shop_name'        => ['required', 'string', 'max:255'],
-                'shop_description' => ['nullable', 'string'],
-            ]);
-            $user->vendor->update($vendorData);
-        }
-
-        // Update rider-specific fields if this user is a rider
-        if ($user->isRider() && $user->rider) {
-            $riderData = $request->validate([
-                'vehicle_type'  => ['required', 'string', 'max:100'],
-                'license_plate' => ['nullable', 'string', 'max:50'],
-            ]);
-            $user->rider->update($riderData);
-        }
-
-        return redirect()->route('profile.show')
-            ->with('success', 'Your profile has been updated successfully.');
+    if (! empty($validated['password'])) {
+        $user->password = Hash::make($validated['password']);
     }
+
+    $user->save();
+
+    if ($user->isVendor() && $user->vendor) {
+        $vendorData = $request->validate([
+            'shop_name'        => ['required', 'string', 'max:255'],
+            'shop_description' => ['nullable', 'string'],
+        ]);
+        $user->vendor->update($vendorData);
+    }
+
+    if ($user->isRider() && $user->rider) {
+        $riderData = $request->validate([
+            'vehicle_type'  => ['required', 'string', 'max:100'],
+            'license_plate' => ['nullable', 'string', 'max:50'],
+        ]);
+        $user->rider->update($riderData);
+    }
+
+    // Let the user know specifically if their email changed
+    $message = $oldEmail !== $validated['email']
+        ? 'Your profile has been updated. Your email address was changed to ' . $validated['email'] . '.'
+        : 'Your profile has been updated successfully.';
+
+    return redirect()->route('profile.show')->with('success', $message);
+}
 }

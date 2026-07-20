@@ -99,6 +99,9 @@
             <a href="{{ route('admin.reports.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition {{ request()->routeIs('admin.reports.*') ? 'bg-white/20 backdrop-blur-sm' : '' }}">
                 📈 <span>Reports</span>
             </a>
+            <a href="{{ route('admin.users.index') }}" class="flex items-center gap-3 px-6 py-3 hover:bg-neutral-800 {{ request()->routeIs('admin.users.index') ? 'bg-orange-600' : '' }}">
+    👥 <span>All Users</span>
+</a>
         @endif
     </nav>
 

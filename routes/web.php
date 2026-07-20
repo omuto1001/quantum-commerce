@@ -77,6 +77,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
 
     Route::get('/vendors', [\App\Http\Controllers\Admin\UserManagementController::class, 'vendors'])->name('admin.vendors');
     Route::get('/riders', [\App\Http\Controllers\Admin\UserManagementController::class, 'riders'])->name('admin.riders');
+    Route::get('/users', [\App\Http\Controllers\Admin\UserManagementController::class, 'index'])->name('admin.users.index');
     Route::get('/users/{user}', [\App\Http\Controllers\Admin\UserManagementController::class, 'show'])->name('admin.users.show');
     Route::delete('/users/{user}', [\App\Http\Controllers\Admin\UserManagementController::class, 'destroy'])->name('admin.users.destroy');
 

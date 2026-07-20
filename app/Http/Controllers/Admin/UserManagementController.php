@@ -51,4 +51,14 @@ class UserManagementController extends Controller
 
         return back()->with('success', "{$role} account for {$name} has been deleted.");
     }
+
+    // List every user on the platform, regardless of role
+public function index()
+{
+    $users = User::with(['vendor', 'rider'])
+        ->latest()
+        ->get();
+
+    return view('admin.users.index', compact('users'));
+}
 }
