@@ -32,8 +32,8 @@ class RegisterController extends Controller
     'address'  => ['required', 'string', 'max:255'],
     'password' => ['required', 'string', 'min:8', 'confirmed'],
 ], [
-    'email.regex' => 'Please use a Gmail address (must end in @gmail.com).',
-    'phone.regex' => 'Phone number must be exactly 10 digits.',
+    'email.regex' => 'Your email address must end in @gmail.com.',
+    'phone.regex' => 'Your phone number must be 10 digits.',
 ]);
 
         $user = User::create([
@@ -79,8 +79,8 @@ class RegisterController extends Controller
     'shop_name'        => ['required', 'string', 'max:255'],
     'shop_description' => ['nullable', 'string'],
 ], [
-    'email.regex' => 'Please use a Gmail address (must end in @gmail.com).',
-    'phone.regex' => 'Phone number must be exactly 10 digits.',
+    'email.regex' => 'Your email address must end in @gmail.com.',
+    'phone.regex' => 'Your phone number must be 10 digits.',
 ]);
         $user = User::create([
             'name'            => $validated['name'],
@@ -130,8 +130,8 @@ class RegisterController extends Controller
     'license_plate'      => ['nullable', 'string', 'max:50'],
     'national_id_number' => ['nullable', 'string', 'max:50'],
 ], [
-    'email.regex' => 'Please use a Gmail address (must end in @gmail.com).',
-    'phone.regex' => 'Phone number must be exactly 10 digits.',
+    'email.regex' => 'Your email address must end in @gmail.com.',
+    'phone.regex' => 'Your phone number must be 10 digits.',
 ]);
 
         $user = User::create([
