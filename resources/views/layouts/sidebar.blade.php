@@ -2,7 +2,7 @@
     resources/views/layouts/sidebar.blade.php
     Glassmorphism sidebar - frosted glass effect over the gradient background.
 --}}
-<aside id="sidebar" class="w-64 h-screen bg-neutral-900 text-white flex flex-col fixed left-0 top-0 z-40 transform -translate-x-full lg:translate-x-0 transition-transform duration-200">
+<aside id="sidebar" class="w-64 h-dvh bg-neutral-900 text-white flex flex-col fixed left-0 top-0 z-40 transform -translate-x-full lg:translate-x-0 transition-transform duration-200">
 
     {{-- Logo --}}
     <div class="flex items-center gap-2 p-6 text-xl font-bold shrink-0 text-orange-300">
