@@ -43,14 +43,15 @@ class UserManagementController extends Controller
     // automatically, because of the onDelete('cascade') we set in
     // the migrations back in Step 2.
     public function destroy(User $user)
-    {
-        $role = $user->roleLabel();
-        $name = $user->name;
+{
+    $role = $user->roleLabel();
+    $name = $user->name;
 
-        $user->delete();
+    $user->delete();
 
-        return back()->with('success', "{$role} account for {$name} has been deleted.");
-    }
+    return redirect()->route('admin.users.index')
+        ->with('success', "{$role} account for {$name} has been deleted.");
+}
 
     // List every user on the platform, regardless of role
 public function index()
