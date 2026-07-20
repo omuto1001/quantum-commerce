@@ -21,8 +21,7 @@ class WelcomeMail extends Mailable
 
     public function build()
     {
-        return $this->subject('Your account has been successfully created!
-        welcome to Quantum Commerce')
+        return $this->subject('Welcome to Quantum Commerce')
             ->view('emails.welcome');
     }
 }
