@@ -19,13 +19,13 @@
         <input type="text" name="name" value="{{ old('name') }}" class="w-full border rounded p-2 mb-4" required>
 
         <label class="block font-semibold mb-1">Email Address</label>
-        <input type="email" name="email" value="{{ old('email') }}" class="w-full border rounded p-2 mb-4" required>
+        <input type="email" name="email" value="{{ old('email') }}" placeholder="e.g. matt@gmail.com" class="w-full border rounded p-2 mb-4" required>
 
         <label class="block font-semibold mb-1">Phone Number</label>
-        <input type="text" name="phone" value="{{ old('phone') }}" class="w-full border rounded p-2 mb-4" required>
+        <input type="text" name="phone" value="{{ old('phone') }}" placeholder="e.g. 0700000000" class="w-full border rounded p-2 mb-4" required>
 
         <label class="block font-semibold mb-1">Address</label>
-        <input type="text" name="address" value="{{ old('address') }}" class="w-full border rounded p-2 mb-4" required>
+        <input type="text" name="address" value="{{ old('address') }}" placeholder="e.g. 123 Main St, City" class="w-full border rounded p-2 mb-4" required>
 
         <label class="block font-semibold mb-1">Password</label>
         <input type="password" name="password" class="w-full border rounded p-2 mb-4" required>
