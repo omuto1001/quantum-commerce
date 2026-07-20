@@ -21,7 +21,7 @@
         <input type="text" name="name" value="{{ old('name') }}" class="w-full border rounded p-2 mb-4" required>
 
         <label class="block font-semibold mb-1">Email Address</label>
-        <input type="email" name="email" value="{{ old('email') }}" class="w-full border rounded p-2 mb-4" required>
+        <input type="email" name="email" value="{{ old('email') }}" placeholder="e.g. matt@gmail.com" class="w-full border rounded p-2 mb-4" required>
 
         <label class="block font-semibold mb-1">Phone Number</label>
         <input type="text" name="phone" value="{{ old('phone') }}" placeholder="e.g. 0700000000" class="w-full border rounded p-2 mb-4" required>
@@ -39,8 +39,7 @@
     </form>
 
     <div class="mt-6 text-sm">
-        Want to sell products? <a href="{{ route('register.vendor') }}" class="text-green-700 underline">Register as a Vendor</a><br>
-        Want to deliver orders? <a href="{{ route('register.rider') }}" class="text-green-700 underline">Register as a Rider</a><br>
+       ss
         Already have an account? <a href="{{ route('login') }}" class="text-green-700 underline">Login</a>
     </div>
 </x-guest-layout>
