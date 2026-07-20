@@ -6,7 +6,3 @@
         <circle cx="0" cy="0" r="9" fill="currentColor"/>
     </g>
 </svg>
-<a href="/" class="flex flex-col items-center">
-    <x-application-logo class="w-24 h-16 text-indigo-500" />
-    <span class="mt-1 text-xl font-semibold text-gray-700">Quantum Commerce</span>
-</a>
