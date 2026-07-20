@@ -26,12 +26,15 @@ class RegisterController extends Controller
     public function registerCustomer(Request $request)
     {
         $validated = $request->validate([
-            'name'     => ['required', 'string', 'max:255'],
-            'email'    => ['required', 'email', 'unique:users,email'],
-            'phone'    => ['required', 'string', 'max:20'],
-            'address'  => ['required', 'string', 'max:255'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
+    'name'     => ['required', 'string', 'max:255'],
+    'email'    => ['required', 'email', 'unique:users,email', 'regex:/^[a-zA-Z0-9._%+-]+@gmail\.com$/'],
+    'phone'    => ['required', 'string', 'regex:/^[0-9]{10}$/'],
+    'address'  => ['required', 'string', 'max:255'],
+    'password' => ['required', 'string', 'min:8', 'confirmed'],
+], [
+    'email.regex' => 'Please use a Gmail address (must end in @gmail.com).',
+    'phone.regex' => 'Phone number must be exactly 10 digits.',
+]);
 
         $user = User::create([
             'name'            => $validated['name'],
@@ -68,15 +71,17 @@ class RegisterController extends Controller
     public function registerVendor(Request $request)
     {
         $validated = $request->validate([
-            'name'             => ['required', 'string', 'max:255'],
-            'email'            => ['required', 'email', 'unique:users,email'],
-            'phone'            => ['required', 'string', 'max:20'],
-            'address'          => ['required', 'string', 'max:255'],
-            'password'         => ['required', 'string', 'min:8', 'confirmed'],
-            'shop_name'        => ['required', 'string', 'max:255'],
-            'shop_description' => ['nullable', 'string'],
-        ]);
-
+    'name'             => ['required', 'string', 'max:255'],
+    'email'            => ['required', 'email', 'unique:users,email', 'regex:/^[a-zA-Z0-9._%+-]+@gmail\.com$/'],
+    'phone'            => ['required', 'string', 'regex:/^[0-9]{10}$/'],
+    'address'          => ['required', 'string', 'max:255'],
+    'password'         => ['required', 'string', 'min:8', 'confirmed'],
+    'shop_name'        => ['required', 'string', 'max:255'],
+    'shop_description' => ['nullable', 'string'],
+], [
+    'email.regex' => 'Please use a Gmail address (must end in @gmail.com).',
+    'phone.regex' => 'Phone number must be exactly 10 digits.',
+]);
         $user = User::create([
             'name'            => $validated['name'],
             'email'           => $validated['email'],
@@ -116,15 +121,18 @@ class RegisterController extends Controller
     public function registerRider(Request $request)
     {
         $validated = $request->validate([
-            'name'               => ['required', 'string', 'max:255'],
-            'email'              => ['required', 'email', 'unique:users,email'],
-            'phone'              => ['required', 'string', 'max:20'],
-            'address'            => ['required', 'string', 'max:255'],
-            'password'           => ['required', 'string', 'min:8', 'confirmed'],
-            'vehicle_type'       => ['required', 'string', 'max:100'],
-            'license_plate'      => ['nullable', 'string', 'max:50'],
-            'national_id_number' => ['nullable', 'string', 'max:50'],
-        ]);
+    'name'               => ['required', 'string', 'max:255'],
+    'email'              => ['required', 'email', 'unique:users,email', 'regex:/^[a-zA-Z0-9._%+-]+@gmail\.com$/'],
+    'phone'              => ['required', 'string', 'regex:/^[0-9]{10}$/'],
+    'address'            => ['required', 'string', 'max:255'],
+    'password'           => ['required', 'string', 'min:8', 'confirmed'],
+    'vehicle_type'       => ['required', 'string', 'max:100'],
+    'license_plate'      => ['nullable', 'string', 'max:50'],
+    'national_id_number' => ['nullable', 'string', 'max:50'],
+], [
+    'email.regex' => 'Please use a Gmail address (must end in @gmail.com).',
+    'phone.regex' => 'Phone number must be exactly 10 digits.',
+]);
 
         $user = User::create([
             'name'            => $validated['name'],
