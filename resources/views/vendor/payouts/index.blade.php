@@ -6,23 +6,25 @@
     <h1 class="text-2xl font-bold text-gray-800 mb-6">My Payouts</h1>
 
     {{-- Wallet balance + request form --}}
-    <div class="bg-white rbg-white/70 backdrop-blur-md rounded-2xl shadow-lg border border-white/40ounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <div class="bg-white/70 backdrop-blur-md rounded-2xl shadow-lg border border-white/40 p-6 mb-6">
         <p class="text-sm text-gray-500">Available Wallet Balance</p>
         <p class="text-3xl font-bold text-green-700 mt-1">UGX {{ number_format($walletBalance, 2) }}</p>
 
         @if ($walletBalance > 0)
-    <form method="POST" action="{{ route('vendor.payouts.store') }}" class="mt-4 flex flex-col sm:flex-row gap-2">
-        @csrf
-        <input type="number" step="0.01" name="amount" value="{{ old('amount', $walletBalance) }}"
-               max="{{ $walletBalance }}" class="flex-1 border rounded-lg p-2 min-w-0" required>
-        <button class="bg-green-700 text-white px-6 py-2 rounded-lg text-sm whitespace-nowrap">Request Payout</button>
-    </form>
-    @error('amount') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
-@else
+            <form method="POST" action="{{ route('vendor.payouts.store') }}" class="mt-4 flex flex-col sm:flex-row gap-2">
+                @csrf
+                <input type="number" step="0.01" name="amount" value="{{ old('amount', $walletBalance) }}"
+                       max="{{ $walletBalance }}" class="flex-1 border rounded-lg p-2 min-w-0" required>
+                <button class="bg-green-700 text-white px-6 py-2 rounded-lg text-sm whitespace-nowrap">Request Payout</button>
+            </form>
+            @error('amount') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
+        @else
+            <p class="text-sm text-gray-400 mt-3">No balance available for payout yet.</p>
+        @endif
     </div>
 
     {{-- Payout history --}}
-    <div class="bg-white rounded-2xl shadow-sm bordebg-white/70 backdrop-blur-md rounded-2xl shadow-lg border border-white/40r border-gray-100 p-6">
+    <div class="bg-white/70 backdrop-blur-md rounded-2xl shadow-lg border border-white/40 p-6">
         <h2 class="text-lg font-bold text-gray-800 mb-4">Payout History</h2>
 
         @forelse ($payouts as $payout)
