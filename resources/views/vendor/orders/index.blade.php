@@ -15,6 +15,7 @@
                 <th>Qty</th>
                 <th>Amount</th>
                 <th>Status</th>
+                <th>Message</th>
                 <th>Update</th>
             </tr>
         </thead>
@@ -36,6 +37,11 @@
                             {{ ucfirst($item->status) }}
                         </span>
                     </td>
+                    <td>
+    <a href="{{ route('messages.show', [$item->order, $item->vendor_id]) }}" class="text-xs text-indigo-600 underline">
+        Message
+    </a>
+</td>
                     <td>
                         {{-- Each row has its own tiny form to change just that item's status --}}
                         <form method="POST" action="{{ route('vendor.orders.update', $item) }}" class="flex gap-1">

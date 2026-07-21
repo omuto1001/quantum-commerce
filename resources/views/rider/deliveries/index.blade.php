@@ -38,9 +38,10 @@
             <div>
                 <p class="font-semibold text-gray-800">{{ $item->product->name }}</p>
                 <p class="text-xs text-gray-500 mt-1">
-                    From: {{ $item->vendor->shop_name }} • To: {{ $item->order->user->name }}
-                </p>
-                <p class="text-xs text-gray-500">Deliver to: {{ $item->order->delivery_address }}</p>
+    From: {{ $item->vendor->shop_name }} • To: {{ $item->order->user->name }}
+</p>
+<p class="text-xs text-gray-500">Phone: {{ $item->order->user->phone }}</p>
+<p class="text-xs text-gray-500">Deliver to: {{ $item->order->delivery_address }}</p>
             </div>
             <form method="POST" action="{{ route('rider.deliveries.accept', $item) }}">
                 @csrf

@@ -23,9 +23,12 @@
     <div class="p-4 border-b last:border-b-0">
         <div class="flex items-center justify-between">
             <div>
-                <p class="font-semibold text-gray-800">{{ $item->product->name }}</p>
-                <p class="text-xs text-gray-500">{{ $item->vendor->shop_name }} • Qty: {{ $item->quantity }}</p>
-            </div>
+    <p class="font-semibold text-gray-800">{{ $item->product->name }}</p>
+    <p class="text-xs text-gray-500">{{ $item->vendor->shop_name }} • Qty: {{ $item->quantity }}</p>
+    <a href="{{ route('messages.show', [$order, $item->vendor_id]) }}" class="text-xs text-indigo-600 underline mt-1 inline-block">
+        Message vendor
+    </a>
+</div>
             <div class="text-right">
                 <p class="font-semibold text-gray-800">UGX {{ number_format($item->price * $item->quantity, 2) }}</p>
                 <span class="text-xs px-2 py-1 rounded-full mt-1 inline-block

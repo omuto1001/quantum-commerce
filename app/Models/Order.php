@@ -27,4 +27,10 @@ public function review()
 {
     return $this->hasOne(Review::class);
 }
+
+
+public function messages()
+{
+    return $this->hasMany(Message::class);
+}
 }
