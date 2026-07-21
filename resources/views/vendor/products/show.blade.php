@@ -42,17 +42,16 @@
         </div>
     </div>
 
-    <div class="flex gap-3">
-        <a href="{{ route('vendor.products.edit', $product) }}" class="bg-gray-700 text-white px-6 py-2 rounded-lg text-sm">Edit Product</a>
-        <a href="{{ route('vendor.products.index') }}" class="bg-gray-200 px-6 py-2 rounded-lg text-sm">Back to My Products</a>
-
-        <form method="POST" action="{{ route('vendor.products.destroy', $product) }}"
-              onsubmit="return confirm('Delete this product?');">
-            @csrf
-            @method('DELETE')
-            <button class="bg-red-600 text-white px-6 py-2 rounded-lg text-sm">Delete</button>
-        </form>
-    </div>
+    <div class="flex flex-col sm:flex-row gap-3">
+    <a href="{{ route('vendor.products.edit', $product) }}" class="bg-gray-700 text-white px-6 py-2 rounded-lg text-sm text-center">Edit Product</a>
+    <a href="{{ route('vendor.products.index') }}" class="bg-gray-200 px-6 py-2 rounded-lg text-sm text-center">Back to My Products</a>
+    <form method="POST" action="{{ route('vendor.products.destroy', $product) }}"
+          onsubmit="return confirm('Delete this product?');" class="w-full sm:w-auto">
+        @csrf
+        @method('DELETE')
+        <button class="bg-red-600 text-white px-6 py-2 rounded-lg text-sm w-full">Delete</button>
+    </form>
+</div>
     {{-- Reviews on this product --}}
 <div class="border-t pt-6 mt-6">
     <h3 class="text-lg font-bold text-gray-800 mb-4">
