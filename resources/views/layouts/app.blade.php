@@ -11,7 +11,7 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="font-sans antialiased bg-gradient-to-br from-slate-900 via-purple-900 to-orange-800 min-h-screen">
+<body class="font-sans antialiased bg-gradient-to-br from-amber-100 via-amber-700 to-stone-900 min-h-screen">
     <div class="min-h-screen">
 
         {{-- Sidebar, fixed to the left --}}
