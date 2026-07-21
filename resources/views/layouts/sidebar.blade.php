@@ -111,14 +111,18 @@
     {{-- Bottom section: user info + logout --}}
     <div class="border-t border-white/20 p-4 shrink-0">
         <div class="flex items-center gap-3 mb-3 bg-white/10 rounded-xl p-3 backdrop-blur-sm">
-            <div class="w-9 h-9 rounded-full bg-gradient-to-br from-orange-400 to-purple-500 text-white flex items-center justify-center font-bold">
-                {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
-            </div>
-            <div>
-                <p class="font-semibold text-sm">{{ strtoupper(auth()->user()->name) }}</p>
-                <p class="text-xs text-orange-300">{{ auth()->user()->roleLabel() }}</p>
-            </div>
+    @if (auth()->user()->profile_photo)
+        <img src="{{ asset('storage/' . auth()->user()->profile_photo) }}" class="w-9 h-9 rounded-full object-cover shrink-0">
+    @else
+        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-orange-400 to-purple-500 text-white flex items-center justify-center font-bold shrink-0">
+            {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
         </div>
+    @endif
+    <div>
+        <p class="font-semibold text-sm">{{ strtoupper(auth()->user()->name) }}</p>
+        <p class="text-xs text-orange-300">{{ auth()->user()->roleLabel() }}</p>
+    </div>
+</div>
 
         <form method="POST" action="{{ route('logout') }}">
             @csrf
