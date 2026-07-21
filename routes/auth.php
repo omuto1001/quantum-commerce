@@ -57,8 +57,5 @@ Route::middleware('auth')->group(function () {
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
 
-        Route::middleware('auth')->group(function () {
-    Route::get('/orders/{order}/messages/{vendor}', [\App\Http\Controllers\MessageController::class, 'show'])->name('messages.show');
-    Route::post('/orders/{order}/messages/{vendor}', [\App\Http\Controllers\MessageController::class, 'store'])->name('messages.store');
-});
+        
 });

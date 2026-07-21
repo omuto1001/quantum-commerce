@@ -38,6 +38,10 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::get('/orders/{order}', [\App\Http\Controllers\OrderController::class, 'show'])->name('orders.show');
     Route::get('/payment/{order}/initiate', [\App\Http\Controllers\PaymentController::class, 'initiate'])->name('payment.initiate');
 });
+Route::middleware('auth')->group(function () {
+    Route::get('/orders/{order}/messages/{vendor}', [\App\Http\Controllers\MessageController::class, 'show'])->name('messages.show');
+    Route::post('/orders/{order}/messages/{vendor}', [\App\Http\Controllers\MessageController::class, 'store'])->name('messages.store');
+});
 
 // -------- Public self-registration routes --------
 Route::get('/register/customer', [RegisterController::class, 'showCustomerForm'])->name('register.customer');
