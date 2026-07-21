@@ -65,13 +65,13 @@ class ProfileController extends Controller
     }
 
     if ($user->isRider() && $user->rider) {
-        $riderData = $request->validate([
-            'vehicle_type'  => ['required', 'string', 'max:100'],
-            'license_plate' => ['nullable', 'string', 'max:50'],
-        ]);
-        $user->rider->update($riderData);
-    }
-
+    $riderData = $request->validate([
+        'vehicle_type'  => ['required', 'string', 'max:100'],
+        'license_plate' => ['nullable', 'string', 'max:50'],
+    ]);
+    $riderData['is_available'] = $request->boolean('is_available');
+    $user->rider->update($riderData);
+}
     // Let the user know specifically if their email changed
     $message = $oldEmail !== $validated['email']
         ? 'Your profile has been updated. Your email address was changed to ' . $validated['email'] . '.'

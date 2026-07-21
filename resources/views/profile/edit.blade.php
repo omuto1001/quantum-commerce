@@ -54,6 +54,13 @@
 
             <label class="block font-semibold mb-1">License Plate</label>
             <input type="text" name="license_plate" value="{{ old('license_plate', $user->rider->license_plate) }}" class="w-full border rounded p-2 mb-4">
+
+            <label class="flex items-center gap-2 mb-4">
+    <input type="checkbox" name="is_available" value="1"
+           {{ old('is_available', $user->rider->is_available) ? 'checked' : '' }}
+           class="rounded border-gray-300">
+    <span class="font-semibold">I'm available to accept deliveries</span>
+</label>
         @endif
 
         <label class="block font-semibold mb-1">New Password (leave blank to keep current password)</label>
