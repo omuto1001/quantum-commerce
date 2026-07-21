@@ -27,7 +27,7 @@
                 </header>
             @endisset
 
-            <main class="p-8 pt-24 lg:pt-8 min-h-screen">
+            <main class="pl-8 pr-8 pb-8 pt-24 lg:pt-8 lg:pl-8 min-h-screen">
                 {{-- Flash success message, shown on any page after a redirect --}}
                 @if (session('success'))
                     <div class="bg-green-100 text-green-800 p-3 rounded mb-4">
