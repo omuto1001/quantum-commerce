@@ -5,12 +5,17 @@ use App\Http\Controllers\Admin\ApprovalController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Response;
 
+Route::get('/quantum-logo', function () {
+    return Response::file(public_path('images/quantum-logo.png'));
+});
 // The homepage
 Route::get('/', function () {
     return view('welcome');
     
 });
+
 
 // -------- Public product browsing (any logged-in user can view) --------
 Route::middleware('auth')->group(function () {

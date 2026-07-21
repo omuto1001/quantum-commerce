@@ -6,7 +6,7 @@
 
 <meta property="og:title" content="Quantum Commerce">
 <meta property="og:description" content="Shop. Sell. Deliver.">
-<meta property="og:image" content="{{ asset('images/quantum-logo.png') }}">
+<meta property="og:image" content="{{ url('/quantum-logo') }}">
 <meta property="og:url" content="https://quantum-commerce-production.up.railway.app">
 <meta property="og:type" content="website">
 
