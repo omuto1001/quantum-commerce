@@ -66,11 +66,20 @@ class ProfileController extends Controller
 
     if ($user->isRider() && $user->rider) {
     $riderData = $request->validate([
-        'vehicle_type'  => ['required', 'string', 'max:100'],
-        'license_plate' => ['nullable', 'string', 'max:50'],
+        'vehicle_type'  => ['required', 'string', 'in:Motorcycle,Bicycle,Car'],
+        'license_plate' => [
+            Rule::requiredIf(in_array($request->vehicle_type, ['Motorcycle', 'Car'])),
+            'nullable',
+            'string',
+            'regex:/^U[A-Z]{2}\s?\d{3}[A-Z]$/i',
+        ],
+    ], [
+        'license_plate.required' => 'A number plate is required for motorcycles and cars.',
+        'license_plate.regex' => 'Enter a valid Ugandan number plate (e.g. UBA 123A).',
     ]);
     $riderData['is_available'] = $request->boolean('is_available');
     $user->rider->update($riderData);
+
 }
     // Let the user know specifically if their email changed
     $message = $oldEmail !== $validated['email']

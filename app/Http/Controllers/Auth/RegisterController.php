@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 
 class RegisterController extends Controller
 {
@@ -120,18 +121,27 @@ class RegisterController extends Controller
 
     public function registerRider(Request $request)
     {
-        $validated = $request->validate([
+      $validated = $request->validate([
     'name'               => ['required', 'string', 'max:255'],
     'email'              => ['required', 'email', 'unique:users,email', 'regex:/^[a-zA-Z0-9._%+-]+@gmail\.com$/'],
     'phone'              => ['required', 'string', 'regex:/^[0-9]{10}$/'],
     'address'            => ['required', 'string', 'max:255'],
     'password'           => ['required', 'string', 'min:8', 'confirmed'],
-    'vehicle_type'       => ['required', 'string', 'max:100'],
-    'license_plate'      => ['nullable', 'string', 'max:50'],
-    'national_id_number' => ['nullable', 'string', 'max:50'],
+    'vehicle_type'       => ['required', 'string', 'in:Motorcycle,Bicycle,Car'],
+    'license_plate'      => [
+        Rule::requiredIf(in_array($request->vehicle_type, ['Motorcycle', 'Car'])),
+        'nullable',
+        'string',
+        'regex:/^U[A-Z]{2}\s?\d{3}[A-Z]$/i',
+    ],
+    'national_id_number' => ['nullable', 'string', 'regex:/^[A-Z]{2}[A-Z0-9]{12}$/i'],
 ], [
     'email.regex' => 'Your email address must end in @gmail.com.',
     'phone.regex' => 'Your phone number must be 10 digits.',
+    'license_plate.required' => 'A number plate is required for motorcycles and cars.',
+    'license_plate.regex' => 'Enter a valid Ugandan number plate (e.g. UBA 123A).',
+    'national_id_number.regex' => 'Enter a valid 14-character National ID number.',
+
 ]);
 
         $user = User::create([
