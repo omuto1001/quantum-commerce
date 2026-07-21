@@ -42,6 +42,9 @@
                 <a href="{{ route('vendor.orders.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition {{ request()->routeIs('vendor.orders.*') ? 'bg-white/20 backdrop-blur-sm' : '' }}">
                     📦 <span>Orders Received</span>
                 </a>
+                <a href="{{ route('messages.vendor.inbox') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition {{ request()->routeIs('messages.vendor.*') ? 'bg-white/20 backdrop-blur-sm' : '' }}">
+                    💬 <span>Messages</span>
+                </a>
                 <a href="{{ route('vendor.payouts.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition {{ request()->routeIs('vendor.payouts.*') ? 'bg-white/20 backdrop-blur-sm' : '' }}">
                     💰 <span>Payouts</span>
                 </a>
@@ -50,9 +53,6 @@
                    class="flex items-center gap-3 px-4 py-3 rounded-xl bg-amber-500/30 hover:bg-amber-500/40 transition">
                     ⏳ <span>Pending Approval</span>
                 </a>
-                <a href="{{ route('messages.vendor.inbox') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition {{ request()->routeIs('messages.vendor.*') ? 'bg-white/20 backdrop-blur-sm' : '' }}">
-    💬 <span>Messages</span>
-</a>
             @endif
         @endif
 
@@ -103,8 +103,8 @@
                 📈 <span>Reports</span>
             </a>
             <a href="{{ route('admin.users.index') }}" class="flex items-center gap-3 px-6 py-3 hover:bg-neutral-800 {{ request()->routeIs('admin.users.index') ? 'bg-orange-600' : '' }}">
-    👥 <span>All Users</span>
-</a>
+                👥 <span>All Users</span>
+            </a>
         @endif
     </nav>
 
