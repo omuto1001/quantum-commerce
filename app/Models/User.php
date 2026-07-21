@@ -15,7 +15,7 @@ class User extends Authenticatable
     // Fields allowed to be mass-assigned (e.g. User::create([...]))
     protected $fillable = [
         'name', 'email', 'password',
-        'approval_status', 'phone', 'address',
+        'approval_status', 'phone', 'address', 'profile_photo',
     ];
 
     // Never expose these when the model is turned into JSON/array
@@ -80,4 +80,5 @@ public function orders()
 {
     return $this->hasMany(Order::class);
 }
+
 }

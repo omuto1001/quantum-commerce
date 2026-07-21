@@ -8,9 +8,13 @@
     <div class="bg-white robg-white/70 backdrop-blur-md rounded-2xl shadow-lg border border-white/40unded-2xl shadow-sm border border-gray-100 p-8 mb-6">
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8 mb-6">
     <div class="flex flex-col sm:flex-row sm:items-center gap-5">
-        <div class="w-20 h-20 rounded-full bg-green-700 text-white flex items-center justify-center text-3xl font-bold shrink-0">
-            {{ strtoupper(substr($user->name, 0, 1)) }}
-        </div>
+        @if ($user->profile_photo)
+    <img src="{{ asset('storage/' . $user->profile_photo) }}" class="w-20 h-20 rounded-full object-cover shrink-0">
+@else
+    <div class="w-20 h-20 rounded-full bg-green-700 text-white flex items-center justify-center text-3xl font-bold shrink-0">
+        {{ strtoupper(substr($user->name, 0, 1)) }}
+    </div>
+@endif
 
         <div class="flex-1 min-w-0">
             <h1 class="text-2xl font-bold text-gray-800 break-words">{{ $user->name }}</h1>

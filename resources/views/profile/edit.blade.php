@@ -13,9 +13,15 @@
         </div>
     @endif
 
-    <form method="POST" action="{{ route('profile.update') }}">
+    <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data">
         @csrf
         @method('PUT') {{-- profile.update route expects a PUT request --}}
+
+        <label class="block font-semibold mb-1">Profile Picture</label>
+@if ($user->profile_photo)
+    <img src="{{ asset('storage/' . $user->profile_photo) }}" class="w-20 h-20 object-cover rounded-full mb-2">
+@endif
+<input type="file" name="profile_photo" accept="image/*" class="w-full border rounded p-2 mb-4">
 
         <label class="block font-semibold mb-1">Full Name</label>
         {{-- old('name', $user->name) means: use the old input if validation
@@ -62,6 +68,9 @@
     <span class="font-semibold">I'm available to accept deliveries</span>
 </label>
         @endif
+
+        <label class="block font-semibold mb-1">Profile Photo</label>
+        <input type="file" name="profile_photo" class="w-full border rounded p-2 mb-4">
 
         <label class="block font-semibold mb-1">New Password (leave blank to keep current password)</label>
         <input type="password" name="password" class="w-full border rounded p-2 mb-4">

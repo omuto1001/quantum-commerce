@@ -35,27 +35,34 @@ class ProfileController extends Controller
     $oldEmail = $user->email;
 
     $validated = $request->validate([
-        'name'    => ['required', 'string', 'max:255'],
-        'email'   => [
-            'required', 'email',
-            Rule::unique('users', 'email')->ignore($user->id),
-        ],
-        'phone'    => ['required', 'string', 'max:20'],
-        'address'  => ['required', 'string', 'max:255'],
-        'password' => ['nullable', 'string', 'min:8', 'confirmed'],
-    ]);
-
+    'name'          => ['required', 'string', 'max:255'],
+    'email'         => [
+        'required', 'email',
+        Rule::unique('users', 'email')->ignore($user->id),
+    ],
+    'phone'         => ['required', 'string', 'max:20'],
+    'address'       => ['required', 'string', 'max:255'],
+    'password'      => ['nullable', 'string', 'min:8', 'confirmed'],
+    'profile_photo' => ['nullable', 'image', 'max:2048'],
+]);
     $user->name    = $validated['name'];
-    $user->email   = $validated['email'];
-    $user->phone   = $validated['phone'];
-    $user->address = $validated['address'];
+$user->email   = $validated['email'];
+$user->phone   = $validated['phone'];
+$user->address = $validated['address'];
 
-    if (! empty($validated['password'])) {
-        $user->password = Hash::make($validated['password']);
+if (! empty($validated['password'])) {
+    $user->password = Hash::make($validated['password']);
+}
+
+if ($request->hasFile('profile_photo')) {
+    // Delete the old photo first, if one exists
+    if ($user->profile_photo) {
+        \Illuminate\Support\Facades\Storage::disk('public')->delete($user->profile_photo);
     }
+    $user->profile_photo = $request->file('profile_photo')->store('profile-photos', 'public');
+}
 
-    $user->save();
-
+$user->save();
     if ($user->isVendor() && $user->vendor) {
         $vendorData = $request->validate([
             'shop_name'        => ['required', 'string', 'max:255'],
