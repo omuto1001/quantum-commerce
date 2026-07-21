@@ -18,10 +18,10 @@
         @method('PUT') {{-- profile.update route expects a PUT request --}}
 
         <label class="block font-semibold mb-1">Profile Picture</label>
-@if ($user->profile_photo)
-    <img src="{{ asset('storage/' . $user->profile_photo) }}" class="w-20 h-20 object-cover rounded-full mb-2">
-@endif
-<input type="file" name="profile_photo" accept="image/*" class="w-full border rounded p-2 mb-4">
+        @if ($user->profile_photo)
+            <img src="{{ asset('storage/' . $user->profile_photo) }}" class="w-20 h-20 object-cover rounded-full mb-2">
+        @endif
+        <input type="file" name="profile_photo" accept="image/*" class="w-full border rounded p-2 mb-4">
 
         <label class="block font-semibold mb-1">Full Name</label>
         {{-- old('name', $user->name) means: use the old input if validation
@@ -62,15 +62,12 @@
             <input type="text" name="license_plate" value="{{ old('license_plate', $user->rider->license_plate) }}" class="w-full border rounded p-2 mb-4">
 
             <label class="flex items-center gap-2 mb-4">
-    <input type="checkbox" name="is_available" value="1"
-           {{ old('is_available', $user->rider->is_available) ? 'checked' : '' }}
-           class="rounded border-gray-300">
-    <span class="font-semibold">I'm available to accept deliveries</span>
-</label>
+                <input type="checkbox" name="is_available" value="1"
+                       {{ old('is_available', $user->rider->is_available) ? 'checked' : '' }}
+                       class="rounded border-gray-300">
+                <span class="font-semibold">I'm available to accept deliveries</span>
+            </label>
         @endif
-
-        <label class="block font-semibold mb-1">Profile Photo</label>
-        <input type="file" name="profile_photo" class="w-full border rounded p-2 mb-4">
 
         <label class="block font-semibold mb-1">New Password (leave blank to keep current password)</label>
         <input type="password" name="password" class="w-full border rounded p-2 mb-4">
