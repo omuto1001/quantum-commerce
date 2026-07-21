@@ -17,7 +17,7 @@
             </style>
         @endif
     </head>
-    <body class="bg-[#FDFDFC] dark:bg-[#0a0a0a] text-[#1b1b18] flex p-6 lg:p-8 items-center lg:justify-center min-h-screen flex-col">
+    <body class="bg-gradient-to-br from-amber-100 via-amber-700 to-stone-900 dark:bg-gradient-to-br dark:from-amber-100 dark:via-amber-700 dark:to-stone-900 text-[#1b1b18] flex p-6 lg:p-8 items-center lg:justify-center min-h-screen flex-col">
         <header class="w-full lg:max-w-4xl max-w-[335px] mb-6 not-has-[nav]:hidden">
     @if (Route::has('login'))
         <div class="flex items-center justify-center gap-2 mb-4">
