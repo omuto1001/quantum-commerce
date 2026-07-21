@@ -45,6 +45,9 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/vendors/{vendor}/messages', [\App\Http\Controllers\MessageController::class, 'showWithVendor'])->name('messages.vendor.show');
 Route::post('/vendors/{vendor}/messages', [\App\Http\Controllers\MessageController::class, 'storeWithVendor'])->name('messages.vendor.store');
+Route::get('/vendor/messages', [\App\Http\Controllers\MessageController::class, 'vendorInbox'])->name('messages.vendor.inbox');
+Route::get('/vendor/messages/{customer}', [\App\Http\Controllers\MessageController::class, 'showAsVendor'])->name('messages.vendor.reply');
+Route::post('/vendor/messages/{customer}', [\App\Http\Controllers\MessageController::class, 'storeAsVendor'])->name('messages.vendor.storeAs');
 
 // -------- Public self-registration routes --------
 Route::get('/register/customer', [RegisterController::class, 'showCustomerForm'])->name('register.customer');

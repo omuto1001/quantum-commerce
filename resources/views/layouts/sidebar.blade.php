@@ -50,6 +50,9 @@
                    class="flex items-center gap-3 px-4 py-3 rounded-xl bg-amber-500/30 hover:bg-amber-500/40 transition">
                     ⏳ <span>Pending Approval</span>
                 </a>
+                <a href="{{ route('messages.vendor.inbox') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition {{ request()->routeIs('messages.vendor.*') ? 'bg-white/20 backdrop-blur-sm' : '' }}">
+    💬 <span>Messages</span>
+</a>
             @endif
         @endif
 

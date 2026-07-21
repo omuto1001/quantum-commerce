@@ -132,4 +132,50 @@ public function storeAsVendor(Request $request, \App\Models\User $customer)
 
     return back();
 }
+
+public function showAsVendor(\App\Models\User $customer)
+{
+    $user = Auth::user();
+    abort_unless($user->isVendor(), 403);
+    $vendor = $user->vendor;
+
+    $messages = Message::where('vendor_id', $vendor->id)
+        ->whereNull('order_id')
+        ->where(function ($q) use ($customer, $user) {
+            $q->where('sender_id', $customer->id)->orWhere('receiver_id', $customer->id);
+        })
+        ->orderBy('created_at')
+        ->get();
+
+    Message::where('vendor_id', $vendor->id)
+        ->whereNull('order_id')
+        ->where('sender_id', $customer->id)
+        ->where('receiver_id', $user->id)
+        ->whereNull('read_at')
+        ->update(['read_at' => now()]);
+
+    return view('messages.vendor-reply', compact('customer', 'messages'));
+}
+
+public function vendorInbox()
+{
+    $user = Auth::user();
+    abort_unless($user->isVendor(), 403);
+    $vendor = $user->vendor;
+
+    // Get one row per distinct customer this vendor has a pre-order thread with
+    $conversations = Message::where('vendor_id', $vendor->id)
+        ->whereNull('order_id')
+        ->get()
+        ->groupBy(function ($message) use ($user) {
+            // Group by "the other person" in the conversation
+            return $message->sender_id === $user->id ? $message->receiver_id : $message->sender_id;
+        })
+        ->map(function ($messages) {
+            return $messages->sortByDesc('created_at')->first();
+        })
+        ->sortByDesc('created_at');
+
+    return view('messages.vendor-inbox', compact('conversations'));
+}
 }
