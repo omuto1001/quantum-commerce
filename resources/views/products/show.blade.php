@@ -31,14 +31,20 @@
             <p class="text-gray-600 mt-4">{{ $product->description ?: 'No description provided.' }}</p>
 
             <p class="text-sm text-gray-500 mt-4">
-                @if ($product->stock > 0)
-                    ✅ {{ $product->stock }} in stock
-                @else
-                    ❌ Out of stock
-                @endif
-            </p>
+    @if ($product->stock > 0)
+        ✅ {{ $product->stock }} in stock
+    @else
+        ❌ Out of stock
+    @endif
+</p>
 
-            @if (auth()->user()->isCustomer() && $product->stock > 0)
+@if (auth()->user()->isCustomer())
+    <a href="{{ route('messages.vendor.show', $product->vendor) }}" class="text-sm text-indigo-600 underline mt-2 inline-block">
+        💬 Message {{ $product->vendor->shop_name }}
+    </a>
+@endif
+
+@if (auth()->user()->isCustomer() && $product->stock > 0)
                 <form method="POST" action="{{ route('cart.add', $product) }}" class="mt-6 flex items-center gap-3">
                     @csrf
                     <input type="number" name="quantity" value="1" min="1" max="{{ $product->stock }}"

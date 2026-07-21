@@ -69,4 +69,67 @@ class MessageController extends Controller
 
         abort_unless($isOwningCustomer || $isRelevantVendor, 403);
     }
+
+    public function showWithVendor(Vendor $vendor)
+{
+    $user = Auth::user();
+    abort_unless($user->isCustomer(), 403);
+
+    $messages = Message::where('vendor_id', $vendor->id)
+        ->whereNull('order_id')
+        ->where(function ($q) use ($user, $vendor) {
+            $q->where('sender_id', $user->id)->orWhere('receiver_id', $user->id);
+        })
+        ->orderBy('created_at')
+        ->get();
+
+    Message::where('vendor_id', $vendor->id)
+        ->whereNull('order_id')
+        ->where('receiver_id', $user->id)
+        ->whereNull('read_at')
+        ->update(['read_at' => now()]);
+
+    return view('messages.show-vendor', compact('vendor', 'messages'));
+}
+
+public function storeWithVendor(Request $request, Vendor $vendor)
+{
+    $user = Auth::user();
+    abort_unless($user->isCustomer(), 403);
+
+    $validated = $request->validate([
+        'body' => ['required', 'string', 'max:2000'],
+    ]);
+
+    Message::create([
+        'order_id'    => null,
+        'vendor_id'   => $vendor->id,
+        'sender_id'   => $user->id,
+        'receiver_id' => $vendor->user_id,
+        'body'        => $validated['body'],
+    ]);
+
+    return back();
+}
+
+public function storeAsVendor(Request $request, \App\Models\User $customer)
+{
+    $user = Auth::user();
+    abort_unless($user->isVendor(), 403);
+    $vendor = $user->vendor;
+
+    $validated = $request->validate([
+        'body' => ['required', 'string', 'max:2000'],
+    ]);
+
+    Message::create([
+        'order_id'    => null,
+        'vendor_id'   => $vendor->id,
+        'sender_id'   => $user->id,
+        'receiver_id' => $customer->id,
+        'body'        => $validated['body'],
+    ]);
+
+    return back();
+}
 }
