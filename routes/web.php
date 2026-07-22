@@ -41,6 +41,7 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
 Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::get('/orders', [\App\Http\Controllers\OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}', [\App\Http\Controllers\OrderController::class, 'show'])->name('orders.show');
+    Route::put('/order-items/{orderItem}/cancel', [\App\Http\Controllers\OrderController::class, 'cancelItem'])->name('order-items.cancel');
     Route::get('/payment/{order}/initiate', [\App\Http\Controllers\PaymentController::class, 'initiate'])->name('payment.initiate');
 });
 Route::middleware('auth')->group(function () {

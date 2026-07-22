@@ -29,6 +29,30 @@
         Message vendor
     </a>
 </div>
+{{-- Cancel option - only for items that haven't shipped yet --}}
+        @if (in_array($item->status, ['pending', 'confirmed']))
+            <button onclick="document.getElementById('cancel-form-{{ $item->id }}').classList.toggle('hidden')"
+                    class="text-xs text-red-600 underline mt-2">
+                Cancel this item
+            </button>
+
+            <form id="cancel-form-{{ $item->id }}" method="POST" action="{{ route('order-items.cancel', $item) }}" class="hidden mt-2">
+                @csrf
+                @method('PUT')
+                <textarea name="cancellation_reason" rows="2" placeholder="Reason for cancelling (optional)"
+                          class="w-full border rounded-lg p-2 text-sm mb-2"></textarea>
+                <button type="submit" onclick="return confirm('Are you sure you want to cancel this item?')"
+                        class="bg-red-600 text-white px-4 py-1.5 rounded-lg text-xs">
+                    Confirm Cancellation
+                </button>
+                 </form>
+        @endif
+
+        {{-- Show the cancellation reason if this item was cancelled --}}
+        @if ($item->status === 'cancelled' && $item->cancellation_reason)
+            <p class="text-xs text-gray-500 mt-2">Reason: {{ $item->cancellation_reason }}</p>
+        @endif
+        
             <div class="text-right">
                 <p class="font-semibold text-gray-800">UGX {{ number_format($item->price * $item->quantity, 2) }}</p>
                 <span class="text-xs px-2 py-1 rounded-full mt-1 inline-block
